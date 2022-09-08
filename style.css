@@ -1,0 +1,19 @@
+.container{
+    display: grid;
+    grid-template-rows: 150px 1fr;
+}
+.library{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    
+
+}
+
+.book{
+    height: 300px;
+    width: 300px;
+    background-color: grey;
+    border-radius: 25px;
+    text-align: center;
+}
