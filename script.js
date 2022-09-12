@@ -9,7 +9,7 @@ function Book(title,author,pages,read){
         let info = `${title} by ${author}, ${pages} pages, ${read}`
         return info
     };
-};
+}
 
 function addBookToLibrary(){
     const form = document.querySelector(".popup-form")
@@ -17,7 +17,14 @@ function addBookToLibrary(){
     let title = document.querySelector("#title")
     let author = document.querySelector("#author")
     let pages = document.querySelector("#pages")
-    newBook = new Book(title.value,author.value,pages.value,read.value)
+    let read = document.querySelector("#read")
+    if (read.checked){
+        read = "Read"
+    } else {
+        read = "Not read"
+    }
+    
+    newBook = new Book(title.value,author.value,pages.value,read)
     myLibrary.push(newBook)
     displayLibrary(myLibrary)
 }
@@ -26,16 +33,63 @@ function displayLibrary(myLibrary){
     const DOMLibrary = document.querySelector(".library")
     clearLibrary(DOMLibrary)
     myLibrary.forEach( book => {
-        let id = myLibrary.indexOf(book)
-        let bookContent = [id,book.title,book.author, book.pages, book.read]
+
         let DOMBook = document.createElement('div')
-        let buttonRemove = document.createElement('button')
         DOMBook.classList.add("book")
-        DOMBook.textContent = bookContent
-        buttonRemove.textContent = "Remove"
-        buttonRemove.addEventListener("click", removeBook)
+
+        let bookTitle = document.createElement('div')
+        bookTitle.textContent = book.title
+        bookTitle.classList.add("title")
+
+        let bookAuthor = document.createElement('div')
+        bookAuthor.textContent = `by ${book.author}`
+        bookAuthor.classList.add("author")
+
+        let bookPages = document.createElement('div')
+        bookPages.textContent = `${book.pages} pages`
+        bookPages.classList.add("pages")
+        
+        let buttonToggleRead = document.createElement('button')
+        if (book.read === "Read"){
+            buttonToggleRead.classList.add("greenRead")
+        } else {
+            buttonToggleRead.classList.add("redRead")
+        }
+        buttonToggleRead.textContent = book.read
+        
+        buttonToggleRead.addEventListener("click", function toggleRead(){
+            if (buttonToggleRead.textContent === "Read"){
+                buttonToggleRead.textContent = "Not read"
+                book.read = "Not read"
+                buttonToggleRead.classList.add("redRead")
+                buttonToggleRead.classList.remove("greenRead")
+                return
+            } else if (buttonToggleRead.textContent === "Not read"){
+                buttonToggleRead.textContent = "Read"
+                book.read = "Read"
+                buttonToggleRead.classList.add("greenRead")
+                buttonToggleRead.classList.remove("redRead")
+
+            }
+            }
+        )
+
+        let buttonRemove = document.createElement('button')
+        buttonRemove.textContent = "X"
+        buttonRemove.classList.add("removeButton")
+        buttonRemove.addEventListener("click", function removeBook(e){
+            myLibrary.splice(e, 1)
+            DOMBook.remove()
+            
+        })
+
+        DOMBook.appendChild(bookTitle)
+        DOMBook.appendChild(bookAuthor)
+        DOMBook.appendChild(bookPages)
+        DOMBook.appendChild(buttonToggleRead)
         DOMBook.appendChild(buttonRemove)
         DOMLibrary.appendChild(DOMBook)
+        
         
     });
 }
@@ -50,12 +104,6 @@ function openForm(){
     const form = document.querySelector(".popup-form")
     form.classList.add("form-open")
 }
-
-function removeBook(id){
-    myLibrary.splice(id, 1)
-    displayLibrary(myLibrary)
-}
-
 
 
 addButton = document.querySelector(".add-button")

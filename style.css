@@ -4,13 +4,14 @@
 }
 .library{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
     gap: 30px;
     
 
 }
 
 .book{
+    position: relative;
     height: 300px;
     width: 300px;
     background-color: grey;
@@ -31,4 +32,48 @@
 
 .form-open{
     display: block;
+}
+
+.title{
+    font-weight: bold;
+    font-size: 36px;
+    margin-top: 50px;
+}
+
+.author{
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.pages{
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.greenRead,.redRead{
+    border-style: none;
+    border-radius: 25px;
+    width: 100px;
+    height: 25px;
+}
+
+.greenRead{
+    background-color: green;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.redRead{
+    background-color: red;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.removeButton{
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 36px;
 }
