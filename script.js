@@ -15,24 +15,6 @@ class Book{
     };
 }
 
-function addBookToLibrary(){
-    const form = document.querySelector(".popup-form")
-    form.classList.remove("form-open")
-    let title = document.querySelector("#title")
-    let author = document.querySelector("#author")
-    let pages = document.querySelector("#pages")
-    let read = document.querySelector("#read")
-    if (read.checked){
-        read = "Read"
-    } else {
-        read = "Not read"
-    }
-    
-    newBook = new Book(title.value,author.value,pages.value,read)
-    myLibrary.push(newBook)
-    displayLibrary(myLibrary)
-}
-
 function displayLibrary(myLibrary){
     const DOMLibrary = document.querySelector(".library")
     clearLibrary(DOMLibrary)
@@ -105,14 +87,58 @@ function clearLibrary(DOMLibrary){
 }
 
 function openForm(){
-    const form = document.querySelector(".popup-form")
-    form.classList.add("form-open")
+    const popupForm = document.querySelector(".popup-form")
+    popupForm.classList.add("form-open")
 }
 
 
 addButton = document.querySelector(".add-button")
 addButton.addEventListener("click", openForm)
-submitButton = document.querySelector("#submit")
-submitButton.addEventListener("click", addBookToLibrary)
 
+const form = document.querySelector('form')
+const pages = document.querySelector('#pages')
+const pagesError = document.querySelector("#pages + span.error")
+
+pages.addEventListener("input", (e) => {
+    if(pages.validity.valid){
+        pagesError.textContent = ""
+        pagesError.className = "error"
+    } else {
+        showError()
+    }
+})
+
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault()
+    console.log(e)
+    const form = document.querySelector(".popup-form")
+    form.classList.remove("form-open")
+    let title = document.querySelector("#title")
+    let author = document.querySelector("#author")
+    let pages = document.querySelector("#pages")
+    let read = document.querySelector("#read")
+    if (read.checked){
+        read = "Read"
+    } else {
+        read = "Not read"
+    }
+    newBook = new Book(title.value,author.value,pages.value,read)
+    myLibrary.push(newBook)
+    displayLibrary(myLibrary)
+})
+
+function showError(){
+    if(pages.validity.valueMissing){
+        pagesError.textContent = "Please enter pages"
+    } else if(pages.validity.stepMismatch) {
+        pagesError.textContent = "Please enter a whole number of pages"
+    } else if(pages.validity.rangeUnderflow){
+        pagesError.textContent = "Minimum pages is 1"
+        
+    } else {
+        pagesError.textContent = "Please enter a number"
+    }
+    pagesError.className = "error active"
+}
 
