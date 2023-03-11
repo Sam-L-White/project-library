@@ -15,24 +15,6 @@ class Book{
     };
 }
 
-function addBookToLibrary(){
-    const form = document.querySelector(".popup-form")
-    form.classList.remove("form-open")
-    let title = document.querySelector("#title")
-    let author = document.querySelector("#author")
-    let pages = document.querySelector("#pages")
-    let read = document.querySelector("#read")
-    if (read.checked){
-        read = "Read"
-    } else {
-        read = "Not read"
-    }
-    
-    newBook = new Book(title.value,author.value,pages.value,read)
-    myLibrary.push(newBook)
-    displayLibrary(myLibrary)
-}
-
 function displayLibrary(myLibrary){
     const DOMLibrary = document.querySelector(".library")
     clearLibrary(DOMLibrary)
@@ -105,14 +87,65 @@ function clearLibrary(DOMLibrary){
 }
 
 function openForm(){
-    const form = document.querySelector(".popup-form")
-    form.classList.add("form-open")
+    const popupForm = document.querySelector(".popup-form")
+    popupForm.classList.add("form-open")
 }
 
 
 addButton = document.querySelector(".add-button")
 addButton.addEventListener("click", openForm)
-submitButton = document.querySelector("#submit")
-submitButton.addEventListener("click", addBookToLibrary)
 
+const form = document.querySelector('form')
+const formElements = document.querySelectorAll('input')
 
+formElements.forEach((element) => addEventListener("input", (e) => {
+    let elementError = document.querySelector(`#${element.id} + span.error`)
+    if(element.validity.valid){
+        elementError.textContent = ""
+        elementError.className = "error"
+    } else {
+        showError(element, elementError)
+    }
+}))
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let valid = true
+    formElements.forEach((element) => {
+        let elementError = document.querySelector(`#${element.id} + span.error`)
+        if(!element.validity.valid){
+            showError(element, elementError)
+            valid = false
+        }
+    })
+    console.log(valid)
+    if(valid == true){
+        const form = document.querySelector(".popup-form")
+        form.classList.remove("form-open")
+        let title = document.querySelector("#title")
+        let author = document.querySelector("#author")
+        let pages = document.querySelector("#pages")
+        let read = document.querySelector("#read")
+        if (read.checked){
+            read = "Read"
+        } else {
+            read = "Not read"
+        }
+        newBook = new Book(title.value,author.value,pages.value,read)
+        myLibrary.push(newBook)
+        displayLibrary(myLibrary)
+    }
+})
+
+function showError(element, elementError){
+    if(element.validity.valueMissing){
+        elementError.textContent = `Please enter ${element.name}`
+    } else if(element.validity.stepMismatch) {
+        elementError.textContent = "Please enter a whole number of pages"
+    } else if(element.validity.rangeUnderflow){
+        elementError.textContent = "Minimum pages is 1"
+    } else {
+        elementError.textContent = "Please enter a number"
+    }
+    elementError.className = "error active"
+}
